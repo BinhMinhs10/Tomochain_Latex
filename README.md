@@ -42,4 +42,28 @@
 		\subsubparagraph{sub sub name}
 			Content
 ```
+### 3. Format function
+```bash
+\begin{equation}
+	f(x) = x^2
+\end{equation}
+```
 
+### 4.Captioned images
+```bash
+\usepackage{graphicx}
+\begin{document}
+	\begin{figure}[h!]
+		\includegraphics[width=\linewidth]{1.png}
+		\caption{Tomochain}
+	\end{figure}
+\end{document}
+```
+
+- h (here) - same location
+- t (top) - top of page
+- b (bottom) - bottom of page
+- p (page) - on an extra page
+- ! (override) - will force the specified location
+
+### 5. Table of contents
