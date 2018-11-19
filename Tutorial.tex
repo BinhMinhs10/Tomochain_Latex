@@ -2,7 +2,19 @@
 
 \usepackage{amsmath}
 \usepackage{graphicx}
-	
+\usepackage{hyperref}
+
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Sharelatex Example},
+    bookmarks=true,
+    pdfpagemode=FullScreen,
+}
+
 
 \title{TomoChain}
 \date{20/11/2018}
@@ -10,11 +22,16 @@
 \begin{document}
 	\pagenumbering{gobble}
 	\maketitle
+	\tableofcontents
+	\listoffigures
+ 	\listoftables
 	\newpage
 	\pagenumbering{arabic}
 	
 	\section{Leader Election}
-	Hello world!
+	Some of the \textbf{greatest} \\
+	discoveries in \underline{science} \\ 
+	were made by \textbf{\textit{accident}}.
 	
 		\subsection{Concept}
 			Structuring a document is easy!
@@ -40,6 +57,39 @@
 		\caption{Tomochain}
 	\end{figure}
 	
+	\section{List}
+	\subsection{Unordered lists}
+	\begin{itemize}
+		\item One
+		\item Two
+		\item Three
+	\end{itemize}
+
+	\subsection{Ordered lists}
+	\begin{enumerate}
+		\item One
+		\item Two
+		\item Three
+	\end{enumerate}
+
+	This is my link: \href{http://www.latex-tutorial.com}{LaTeX-Tutorial}.
+	You can also link to bare URLs without an additional description: \url{http://www.latex-tutorial.com}
+
+	\begin{table}[h!]
+  		\begin{center}
+    			\caption{Your first table.}
+    			\label{tab:table1}
+   		 \begin{tabular}{l|c|r} % <-- Alignments: 1st column left, 2nd middle and 3rd right, with vertical lines in between
+     			 \textbf{Value 1} & \textbf{Value 2} & \textbf{Value 3}\\
+      			$\alpha$ & $\beta$ & $\gamma$ \\
+     			 \hline
+      			1 & 1110.1 & a\\
+      			2 & 10.1 & b\\
+			\hline
+      			3 & 23.113231 & c\\
+    		\end{tabular}
+ 	 	\end{center}
+	\end{table}
 	
 
 \end{document}
