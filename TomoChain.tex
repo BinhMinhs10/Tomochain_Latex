@@ -3,6 +3,7 @@
 \usepackage[utf8]{vietnam}
 \usepackage{graphicx}
 \usepackage{hyperref}
+\usepackage{fixltx2e}
 %\usepackage{fancybox}
 \usepackage[left=3.50cm, right=2.00cm, top=2.00cm, bottom=2.00cm]{geometry}
 
@@ -47,8 +48,8 @@
 		 20152453
 	}}\\[12pt]
 
-	\hspace{5cm} Giáo viên hướng dẫn \hspace{20pt} :  \hspace{2pt} \textbf{\parbox[t]{5cm}{    
-		Đào Thành Chung
+	\hspace{5cm} GV hướng dẫn \hspace{20pt} :  \hspace{2pt} \textbf{\parbox[t]{5cm}{    
+		TS. Đào Thành Chung
 	}}
 
 	\vspace{3cm}
@@ -63,12 +64,16 @@
 	\section{Cơ chế đồng thuận}
 	Cơ chế đồng thuận Proof-of-Stake Voting (PoSV) là giao thức Proof-of-Stake (PoS) cơ bản với cơ chế bỏ phiếu công bằng
 	\section{Kiến trúc TomoChain}
-	Kiến trúc chuỗi TomoChain duy trì một tập các masternodes trong sự nhất quán thông qua giao thức đồng thuận TomoChain. Các masternodes là các full nodes mà giữ TOMO. Để những người giữ TOMO (coin-holder) trở thành masternode cần:
+	Kiến trúc chuỗi TomoChain duy trì một tập các masternodes trong sự nhất quán thông qua giao thức đồng thuận TomoChain. 
 	\begin{itemize}
-		\item coin-holder phải giữ ít nhất 1 lượng coin tối thiểu được yêu cầu.
-		\item coin-holder phải một trong các ứng cử viên được bầu chọn làm masternode nhiều trong hệ thống.
+		\item Coin-holder (người nắm giữ TOMO) phải giữ ít nhất 1 lượng coin tối thiểu được yêu cầu để trở thành masternode.
+		\item Các ứng viên sẽ nhận phiếu bầu từ phía coin-holder.
+		\item Những ứng viên nhận được nhiều phiếu bầu nhất sẽ được lựa chọn trở thành Masternodes.
+		\item Việc tạo block sẽ được xoay vòng và luân chuyển đi kèm với cơ chế đồng thuận hai lớp.
+		\item Masternode sau khi tiến hành việc tạo và xác thực block sẽ được nhận thưởng.
 	\end{itemize} 
-	Ngoài ra, TomoChain còn cung cấp kĩ thuật mới gọi là Double Validation với cơ chế Randomization.  Kĩ thuật mới này làm giảm đáng kể xác suất có chuỗi không hợp lệ trong blockchain.
+	TomoChain với kĩ thuật mới gọi là Double Validation với cơ chế Randomization.  Kĩ thuật mới này làm giảm đáng kể xác suất có chuỗi không hợp lệ trong blockchain.
+
 	\section{Election Leader}
 	\subsection{Coin-holders, Masternodes}
 		\paragraph{Coin-holder}
@@ -89,11 +94,48 @@
 		\subparagraph{} Mỗi epoch bao gồm 900 khối, tương đương với phần thưởng là 250 TOMO trong hai năm đầu tiên. Lượng 250 TOMO này sẽ được chia cho tất cả các masternode theo tỷ lệ số chữ kí mà họ kí trong một epoch. Sau đó, phần thưởng kiếm được bởi mỗi masternode sẽ được chia thành 3 phần:
 		 \begin{itemize}		
 			\item Phần thưởng cho cơ sở hạ tầng: 40 \%, sẽ được chuyển cho người sở hữu masternode.
-			\item Phần thưởng staking: 50 \% sẽ được chuyển cho nhóm những người bầu chọn cho masternode, và sẽ được chia theo tỷ lệ giữa các vote theo lượng họ stake.
-			\item Phần thưởng cho tổ chức sáng lập: 10 \% còn lại được kiểm soát bởi tổ chức sáng lập của Masternode, trong thời gian đầu thì tổ chức này là Tomochain.
+			\item Phần thưởng staking: 50 \% sẽ được chuyển cho nhóm những người bầu chọn cho masternode.
+			\item Phần thưởng cho tổ chức sáng lập: 10 \% còn lại được kiểm soát bởi tổ chức sáng lập của Masternode (TomoChain)
 		\end{itemize}
 		
 	
 	\section{TomoChain Consensus Protocol}
-	
+		\subsection{Double Validation Process}
+		Xác thực hai lớp trong TomoChain yêu cầu chữ ký của 2 masternode trong một block để có thể thêm vào blockchain là \textbf{block creator} (block producer) và \textbf{block verifier} chọn ngầu nhiên trong các masternode được đã bầu.  
+		\begin{center}
+			\includegraphics[width=\linewidth]{DV.png} 
+		\end{center}
+		Nếu M2 là kẻ tấn công bắt tay với M1 kí  (sign) block100 mặc dù nó là invalid
+		\begin{itemize}		
+			\item Single validation: M2 sau đó  tạo block101 là valid, M3 sẽ kí block101 . Khi đó phải 'rebase' để khôi phục tính hợp lệ của blockchain 
+			\item Double validation: M3 lúc này sẽ từ chối (reject) block101 do không đủ 2 chữ kí
+		\end{itemize}
+
+
+		\subsection{Algorithm}
+		Một số kí hiệu và định nghĩa
+		\begin{itemize}		
+			\item Mỗi epoch gồm n (900) block slot,mỗi slot chỉ được tạo 1 block: e\textsubscript{1} <-- \{ sl\textsubscript{1}, sl\textsubscript{2}, ... , sl\textsubscript{n} \}
+			\item Có tập gồm m (150) masternotes tương tác thông qua giao thức để đạt sự thống nhất: VC <-- \{ V\textsubscript{1}, V\textsubscript{2}, ... , V\textsubscript{m} \}
+			\item Mỗi masternode V\textsubscript{i} có một cặp public/private key ( pk\textsubscript{i}, sk\textsubscript{i} ) và giả sử đều biết public key của những node khác.
+			\item Block B\textsubscript{j} tạo tại slot sl\textsubscript{i} gồm state st\textsubscript{i} = Hash(
+B\textsubscript{j-1}) , dữ liệu d , chữ ký Sign\textsubscript{sk\textsubscript{i}} ( st, d, sl\textsubscript{i})		
+		\end{itemize}
+		\begin{center}
+			\includegraphics[width=\linewidth]{algo.png} 
+		\end{center}
+
+		\subsection{Sharding}
+		Thay vì từng masternode lưu trữ tất cả blockchain, thì từng node chỉ cần lưu trữ một phần của nó.
+		TomoChain sử dụng 150 masternodes để tạo blocks và bảo mật mạng. Mỗi epoch, ngẫu nhiên chia 10-15 masternode mỗi shard.
+		Consensus Smart Contracts:
+		\begin{itemize}		
+			\item Voting Smart Contract
+			\item Block Signer Smart Contract
+		\end{itemize}
+		Có một root chain tương tác với shard chain. Root chain được sử dụng chủ yếu để đảm bảo giao dịch trong từng shard nhưng không lưu trữ chi tiết giao dịch. Block tạo ra được công nhận nếu 3/4 trong tổng số masternode trong shard đó xác minh và kí trên đó.
+		\begin{center}
+			\includegraphics[width=\linewidth]{sharding.png} 
+		\end{center}
+
 \end{document}
